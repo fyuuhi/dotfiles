@@ -52,6 +52,9 @@ bindkey -M menuselect '^k' vi-up-line-or-history
 bindkey -M menuselect '^l' vi-forward-char
 
 
+# for autojump
+#[[ -s /home/yfukuhar/.autojump/etc/profile.d/autojump.sh ]] && source /home/yfukuhar/.autojump/etc/profile.d/autojump.sh
+
 
 autoload -U compinit; compinit
 
