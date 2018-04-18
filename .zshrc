@@ -245,6 +245,7 @@ zshaddhistory() {
   && ${cmd} != (rm)
   && ${cmd} != (mv)
   && ${cmd} != (cp)
+  && ${cmd} != (mkdir)
   ]]
 }
 export LS_COLORS='di=04;035'
