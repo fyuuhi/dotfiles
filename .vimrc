@@ -13,7 +13,11 @@ Plug 'joshdick/onedark.vim'
 Plug 'google/vim-searchindex'
 Plug 'tpope/vim-fugitive'
 Plug 'kien/rainbow_parentheses.vim'
+Plug 'scrooloose/nerdcommenter'
+Plug 'rhysd/clever-f.vim'
+"Plug 'vim-syntastic/syntastic'
 "Plug 'jiangmiao/auto-pairs'
+Plug 'ujihisa/unite-colorscheme'
 Plug 'sheerun/vim-polyglot'
 Plug 'Shougo/vimfiler'
 Plug 'Shougo/unite-outline'
@@ -30,12 +34,20 @@ Plug 'haya14busa/vim-operator-flashy'
 Plug 'dracula/vim'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'davidhalter/jedi-vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'majutsushi/tagbar'
+Plug 'jacquesbh/vim-showmarks'
+Plug '~/.fzf'
+Plug 'junegunn/fzf.vim'
+
+
 
 call plug#end()
 
 set encoding=utf-8
 set fileformats=unix,dos,mac
 
+set notitle
 syntax on 
 set ignorecase
 set smartcase
@@ -53,6 +65,7 @@ set showmatch
 set title
 set incsearch
 set hlsearch
+"autocmd Filetype * set formatoptions-=ro
 set wildmenu
 set history=5000
 set scrolloff=5
@@ -72,6 +85,8 @@ inoremap <silent> <C-a> <Esc>^<Insert>
 inoremap <silent> <C-e> <Esc>$<Insert><Right>
 nnoremap + :<C-u>call append(expand('.'), '')<Cr>
 
+set noswapfile
+
 let mapleader = "\<Space>"
 "noremap <buffer> p  <CR>zz<C-w>p
 
@@ -82,18 +97,28 @@ hi TabLineFill term=reverse cterm=reverse ctermfg=black ctermbg=white
 nnoremap j gj
 nnoremap k gk
 nnoremap m %
-nnoremap 9 0
-nnoremap 0 $
+nnoremap % m
+nnoremap <C-h> 0
+nnoremap <C-l> $
 nnoremap ; :
 nnoremap : ;
 nnoremap gr g<S-t>
 
 
+vnoremap j gj
+vnoremap k gk
+vnoremap m %
+vnoremap <C-h> 0
+vnoremap <C-l> $
+vnoremap ; :
+vnoremap : ;
+vnoremap gr g<S-t>
+
 colorscheme onedark
 highlight Visual ctermbg=240
 highlight Pmenu ctermfg=white ctermbg=245
 highlight PmenuSel ctermfg=white ctermbg=27
-highlight Search ctermfg=235 ctermbg=39
+highlight Search ctermfg=black ctermbg=red
 highlight Cursorcolumn term=underline ctermbg=236 guibg=#2C323C
 highlight ColorColumn term=underline ctermbg=236 guibg=#2C323C
 highlight MatchParen ctermfg=235 ctermbg=114
@@ -113,13 +138,13 @@ endi
 "@@statuline when insetrt mode
 let g:hi_insert = 'highlight StatusLine guifg=darkblue guibg=darkyellow gui=none ctermfg=yellow ctermbg=gray cterm=none'
 
-if has('syntax')
-  augroup InsertHook
-      autocmd!
-      autocmd InsertEnter * call s:StatusLine('Enter')
-      autocmd InsertLeave * call s:StatusLine('Leave')
-  augroup END
-endif
+"if has('syntax')
+"  augroup InsertHook
+"      autocmd!
+"      autocmd InsertEnter * call s:StatusLine('Enter')
+"      autocmd InsertLeave * call s:StatusLine('Leave')
+"  augroup END
+"endif
 
 let s:slhlcmd = ''
 function! s:StatusLine(mode)
@@ -272,11 +297,11 @@ let g:EasyMotion_do_mapping = 0 " Disable default mappings
 
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
 " `s{char}{label}`
-nmap f <Plug>(easymotion-overwin-f)
+nmap <S-f> <Plug>(easymotion-overwin-f)
 " or
 " `s{char}{char}{label}`
 " Need one more keystroke, but on average, it may be more comfortable.
-nmap f <Plug>(easymotion-overwin-f2)
+nmap <S-f> <Plug>(easymotion-overwin-f2)
 
 " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
@@ -369,7 +394,7 @@ vmap <Enter> <Plug>(EasyAlign)
 vmap <Enter>-> :EasyAlign*/->*/<CR>
 
 "@@Vimshell
-noremap vw :sp<cr><c-w><c-w>:VimShell<cr>
+noremap va :sp<cr><c-w><c-w>:VimShell<cr>
 nnoremap <silent> vs :VimShell<CR>
 nnoremap <silent> vp :VimShell<CR>
 
@@ -409,8 +434,22 @@ nmap Y <Plug>(operator-flashy)$
 autocmd FileType python setlocal completeopt-=preview
 autocmd FileType python let b:did_ftplugin = 1
 
+"@@clever-f
+let g:clever_f_ignore_case = 1
+let g:clever_f_smart_case = 1
+let g:clever_f_fix_key_direction = 1
+let g:clever_f_chars_match_any_signs = ';'
 
+nnoremap <C-q> :TagbarToggle<CR>
 
+aug show-marks-sync
+  au!
+  au BufReadPost * sil! DoShowMarks
+aug END
 
-
-
+nnoremap 'f :GFiles<CR>
+nnoremap 'F :GFiles?<CR>
+nnoremap 'b :Buffers<CR>
+nnoremap 'l :BLines<CR>
+nnoremap 'h :History<CR>
+nnoremap 'm :Mark<CR>

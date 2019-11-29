@@ -126,3 +126,5 @@ tty -s && stty start undef
 
 #cal -3
 
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

@@ -60,18 +60,36 @@ autoload -U compinit; compinit
 
 setopt auto_cd
 
+alias tlog='2>&1 | tee'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias ls='ls -CFX --color=auto'
-alias l='ls -rtl'
-alias ll='ls -artl'
-alias lll='ls -rtl'
-alias bd='cd ../' #back directory
+alias l='ls -rtlh'
+alias ll='ls -artlh'
+alias lll='ls -rtlh'
+alias bd='..'
+alias bdbd='../../'
+alias bdbdbd='../../../'
+alias bdbdbdbd='../../../../'
+alias bdbdbdbdbd='../../../../../'
+alias bdbdbdbdbdbd='../../../../../../'
+alias bdbdbdbdbdbdbd='../../../../../../../'
+alias bdbdbdbdbdbdbdbd='../../../../../../../../'
+alias bdbdbdbdbdbdbdbdbd='../../../../../../../../../'
+alias bdbdbdbdbdbdbdbdbdbd='../../../../../../../../../../'
+alias bdbdbdbdbdbdbdbdbdbdbd='../../../../../../../../../../../'
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'
 function evi(){
   evince $1 &
+}
+function oku(){
+  okular $1 &
+}
+
+function path(){
+  echo $PWD"/"$1
 }
 alias root='root -l'
 alias v='vim'
@@ -80,7 +98,9 @@ alias g='git'
 alias le='less'
 alias wa='watch -n 1 -d'
 alias vd='cd -'
-alias gitlog='git log --graph --abbrev-commit --decorate --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
+#alias glog='git log --graph --abbrev-commit --decorate --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
+alias glog='git log --graph --abbrev-commit --date=iso --decorate --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)%ad (%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
+
 
 zstyle ':completion:*:default' menu select=1
 zstyle ':completion:*' list-separator '-->'
@@ -202,6 +222,12 @@ RPROMPT='%{%F{105}%}[%D|%T] [$(echo_display)]%{${reset_color}%}'
 
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
+#du -hs
+function echo-du-hs() {
+source ~/.du.sh
+}
+zle -N echo-du-hs
+bindkey '^]' echo-du-hs
 
 
 #peco
@@ -218,6 +244,8 @@ bindkey '^R' peco-history-selection
 PATH=$PATH:~/local/peco_linux_amd64/
 export PATH=$PATH:~/local/peco_linux_amd64/
 #export HOME=/gpfs/home/yfukuhar/
+PATH=$PATH:~/local/lazygit/
+export PATH=$PATH:~/local/lazygit/
 
 function peco_select(){
   $1 `ls -1a | peco` 
@@ -237,18 +265,20 @@ zshaddhistory() {
 
   # 以下の条件をすべて満たすものだけをヒストリに追加する
   [[ ${#line} -ge 5
-  && ${cmd} != (l|l[sal])
-  && ${cmd} != (c|cd)
+  #&& ${cmd} != (l|l[sal])
+  #&& ${cmd} != (c|cd)
   && ${cmd} != (m|man)
   && ${cmd} != (pwd)
   && ${cmd} != (bd)
   && ${cmd} != (rm)
   && ${cmd} != (mv)
   && ${cmd} != (cp)
-  && ${cmd} != (mkdir)
+  #&& ${cmd} != (mkdir)
+  && ${cmd} != (kill)
   ]]
 }
 export LS_COLORS='di=04;035'
+#export LS_COLORS='di=02;032'
 
 #export LS_COLORS='di=35'
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
@@ -394,8 +424,6 @@ alias glgm='git log --graph --max-count=10'
 alias glo='git log --oneline --decorate'
 alias glol="git log --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias glola="git log --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all"
-alias glog='git log --oneline --decorate --graph'
-alias gloga='git log --oneline --decorate --graph --all'
 alias glp="_git_log_prettily"
 compdef _git glp=git-log
 
@@ -486,5 +514,18 @@ zle clear-screen
 zle -N peco-find
 
 # bind keys
-bindkey '^w' peco-find
+#bindkey '^w' peco-find
 
+TERM=xterm-256color
+
+bindkey -M viins '\er' history-incremental-pattern-search-forward
+bindkey -M viins '^H'  backward-delete-char
+bindkey -M viins '^A'  beginning-of-line
+#bindkey -M viins '^B'  backward-char
+bindkey -M viins '^V'  backward-char
+bindkey -M viins '^E'  end-of-line
+bindkey -M viins '^F'  forward-char
+bindkey -M viins '^W'  backward-kill-word
+bindkey -M viins '^D'  kill-word
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
