@@ -14,7 +14,7 @@ Plug 'google/vim-searchindex'
 Plug 'tpope/vim-fugitive'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'scrooloose/nerdcommenter'
-Plug 'rhysd/clever-f.vim'
+"Plug 'rhysd/clever-f.vim'
 "Plug 'vim-syntastic/syntastic'
 "Plug 'jiangmiao/auto-pairs'
 Plug 'ujihisa/unite-colorscheme'
@@ -33,12 +33,16 @@ Plug 'kana/vim-operator-user'
 Plug 'haya14busa/vim-operator-flashy'
 Plug 'dracula/vim'
 Plug 'Vimjas/vim-python-pep8-indent'
-Plug 'davidhalter/jedi-vim'
+"Plug 'davidhalter/jedi-vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'majutsushi/tagbar'
-Plug 'jacquesbh/vim-showmarks'
+"Plug 'jacquesbh/vim-showmarks'
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
+Plug 'mbbill/undotree'
+Plug 'andymass/vim-matchup'
+Plug 'rhysd/committia.vim'
+
 
 
 
@@ -301,7 +305,7 @@ nmap <S-f> <Plug>(easymotion-overwin-f)
 " or
 " `s{char}{char}{label}`
 " Need one more keystroke, but on average, it may be more comfortable.
-nmap <S-f> <Plug>(easymotion-overwin-f2)
+nmap f <Plug>(easymotion-overwin-f2)
 
 " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
@@ -453,3 +457,8 @@ nnoremap 'b :Buffers<CR>
 nnoremap 'l :BLines<CR>
 nnoremap 'h :History<CR>
 nnoremap 'm :Mark<CR>
+
+nnoremap <F5> :UndotreeToggle<cr>
+
+
+let g:gitgutter_preview_win_floating = 1 

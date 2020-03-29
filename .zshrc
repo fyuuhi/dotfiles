@@ -99,7 +99,8 @@ alias le='less'
 alias wa='watch -n 1 -d'
 alias vd='cd -'
 #alias glog='git log --graph --abbrev-commit --decorate --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
-alias glog='git log --graph --abbrev-commit --date=iso --decorate --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)%ad (%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
+#alias glog='git log --graph --abbrev-commit --date=iso --decorate --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)%ad (%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
+alias glog='git log --graph --abbrev-commit --date=iso --decorate --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)%ad (%ar)%C(reset)%C(bold yellow)%d%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)" --all'
 
 
 zstyle ':completion:*:default' menu select=1
@@ -152,7 +153,7 @@ precmd () {
   # Enter when in normal mode (a new line would come up in insert mode,
   # but normal mode would be indicated)
   #local ret_status="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )" 
-  local ret_status="%(?:%{$fg_bold[green]%}[icepp]:%{$fg_bold[red]%}[icepp])" 
+  local ret_status="%(?:%{$fg_bold[green]%}[icepp] >:%{$fg_bold[red]%}[icepp] >)" 
   #PS1="%{%F{242}$terminfo_down_sc$(insert-mode)$terminfo[rc]%}${vcs_info_msg_0_}$ret_status "
   #PS1="%{%F{242}$terminfo_down_sc$(insert-mode)$terminfo[rc]%}$ret_status "
   PS1="$ret_status "
@@ -166,7 +167,7 @@ case ${KEYMAP} in
   (*)          VI_MODE="$(insert-mode)" ;;
   esac
   #local ret_status="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )" 
-  local ret_status="%(?:%{$fg_bold[green]%}[icepp]:%{$fg_bold[red]%}[icepp])" 
+  local ret_status="%(?:%{$fg_bold[green]%}[icepp] >:%{$fg_bold[red]%}[icepp] >)" 
   #PS1="%{%F{242}$terminfo_down_sc$VI_MODE$terminfo[rc]%}$ret_status "
   PS1="$ret_status "
 }
@@ -247,6 +248,9 @@ export PATH=$PATH:~/local/peco_linux_amd64/
 PATH=$PATH:~/local/lazygit/
 export PATH=$PATH:~/local/lazygit/
 
+PATH=$PATH:~/local/ripgrep-11.0.2-x86_64-unknown-linux-musl/
+export PATH=$PATH:~/local/ripgrep-11.0.2-x86_64-unknown-linux-musl/
+
 function peco_select(){
   $1 `ls -1a | peco` 
 }
@@ -272,7 +276,7 @@ zshaddhistory() {
   && ${cmd} != (bd)
   && ${cmd} != (rm)
   && ${cmd} != (mv)
-  && ${cmd} != (cp)
+  #&& ${cmd} != (cp)
   #&& ${cmd} != (mkdir)
   && ${cmd} != (kill)
   ]]
@@ -338,8 +342,9 @@ alias gapa='git add --patch'
 alias gau='git add --update'
 alias gap='git apply'
 
-alias gb='git branch'
-alias gba='git branch -a'
+alias gb='git branch -v'
+alias gbv='git branch -v'
+alias gba='git branch -av'
 alias gbd='git branch -d'
 alias gbda='git branch --no-color --merged | command grep -vE "^(\*|\s*(master|develop|dev)\s*$)" | command xargs -n 1 git branch -d'
 alias gbl='git blame -b -w'
@@ -529,3 +534,19 @@ bindkey -M viins '^W'  backward-kill-word
 bindkey -M viins '^D'  kill-word
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+mkcd() {
+  mkdir -p "$1"
+  [ $? -eq 0 ] && cd "$1"
+}
+
+
+: "peco snippet" && {
+function peco-select-snippet() {
+BUFFER=$(cat ~/.snippets | peco)
+CURSOR=$#BUFFER
+zle -R -c
+                }
+                zle -N peco-select-snippet
+                bindkey '^x' peco-select-snippet
+              }
